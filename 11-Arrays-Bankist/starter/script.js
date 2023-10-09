@@ -123,7 +123,7 @@ const userName = function (names) {
   return abbrUserName;
 };
 
-// console.log(userName(accounts));
+userName(accounts);
 
 //Display account balance
 const calcPrintAccountBal = function (acc) {
@@ -155,6 +155,8 @@ const calcDisplaySummary = function (acc) {
 //Display UI
 const updateUI = function () {
   //Calculate balance
+
+  console.log('UI is called');
   calcPrintAccountBal(currentAccount);
 
   //display movements
@@ -170,6 +172,8 @@ let currentAccount;
 btnLogin.addEventListener('click', function (e) {
   //Prevent Default
   e.preventDefault();
+
+  console.log('login .....');
 
   //find current account
   currentAccount = accounts.find(
@@ -451,7 +455,7 @@ const dogs = [
 ];
 const recommended = function () {
   dogs.forEach(el => {
-    el.recommendedFood = el.weight ** 0.75 * 28;
+    el.recommendedFood = Math.floor(el.weight ** 0.75 * 28);
 
     //convert to 2dp
     // el.recommendedFood = `${parseFloat(el.recommendedFood).toFixed(2)} kg`;
@@ -459,9 +463,10 @@ const recommended = function () {
   });
 };
 recommended();
-console.log(dogs);
+
 //challange 2
-// Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
+// Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, `so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
+
 const findDogOWner = function (owner) {
   dogs.forEach(el => {
     if (el.owners.includes(owner)) {
@@ -477,16 +482,64 @@ const findDogOWner = function (owner) {
   });
 };
 
-// findDogOWner('Sarah');
+// console.log(dogs)
+
+findDogOWner('Michael');
 
 // Challenge three
 // Create an array containing all owners of dogs who eat too much ('ownersEatTooMuch') and an array with all owners of dogs who eat too little ('ownersEatTooLittle').
 
+const createRecomFoodCategory = function (arr) {
+  let ownersEatTooMuch = [];
+  let ownersEatTooLittle = [];
+  arr.forEach(el => {
+    if (el.curFood > el.recommendedFood * 1.1) {
+      ownersEatTooMuch.push(...el.owners);
+    } else if (el.curFood < el.recommendedFood * 0.9) {
+      ownersEatTooLittle.push(...el.owners);
+    }
+  });
+  // console.log(ownersEatTooLittle, 'to little');
+  // console.log(ownersEatTooMuch, 'too much') ;
 
-const createRecomFoodCategory = function(arr){
-    const detCategory = (dogArr, condition) => dogArr.filter(() => condition) ;
-    let ownersEatTooMuch, ownersEatTooLittle;
-    arr.forEach(el => {
-      el 
-    })
-}
+  return [ownersEatTooLittle, ownersEatTooMuch];
+};
+
+// console.log(createRecomFoodCategory(dogs));
+
+// challenge four
+// Log a string to the console for each array created in 3., like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
+const stringLog = `${createRecomFoodCategory(dogs)[1].join(
+  ' and '
+)} dog's eat Too much and ${createRecomFoodCategory(dogs)[0].join(
+  ' and '
+)} eats too little`;
+
+// console.log(stringLog);
+
+// challenge five
+// Log to the console whether there is any dog eating EXACTLY the amount of food that is recommended (just true or false)
+const exactRecFoodDogs = function (arr) {
+  const answer = arr.some(el => {
+    // console.log(el.curFood, recoInt * 1.1);
+    el.curFood > el.recommendedFood * 1.1 &&
+      el.curFood < el.recommendedFood * 0.9;
+  });
+  return answer;
+};
+
+// console.log(dogs)
+
+// console.log(exactRecFoodDogs(dogs));
+
+// const dogs = [
+//   { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+//   { weight: 8, curFood: 200, owners: ['Matilda'] },
+//   { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+//   { weight: 32, curFood: 340, owners: ['Michael'] },
+// ];
+
+
+
+// challenge eight 
+// Create a shallow copy of the dogs array and sort it by recommended food portion in an ascending order (keep in mind that the portions are inside the array's objects)
