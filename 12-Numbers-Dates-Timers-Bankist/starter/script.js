@@ -103,29 +103,31 @@ const formatTextCur = function (value, locale, currency) {
 
 const startLogoutTimer = function () {
   //initailize the countdown
-  let time = 300;
-
-  //call the timer every seconds
-  const timer = setInterval(() => {
-
+  const timeTack = function () {
     let minutes = String(Math.trunc(time / 60)).padStart(2, 0);
     let seconds = String(time % 60).padStart(2, 0);
 
     labelTimer.textContent = `${minutes}:${seconds}`;
 
+     //if timer equals Zero ,logout user
     if (time === 0) {
-      clearInterval(timer)
-      containerApp.style. opacity = 0;
+      clearInterval(timer);
+      containerApp.style.opacity = 0;
       labelWelcome.textContent = 'Log in to get started';
     }
     time--;
     // console.log("this", time)
     // console.log(minutes,seconds)
-  }, 1000);
+  };
+  let time = 300;
+
+  //call the timer every seconds
+  timeTack();
+  const timer = setInterval(timeTack, 1000);
 
   //update the timer to UI
 
-  //if timer equals Zero ,logout user
+  return timer;
 };
 
 const displayMovements = function (acc, sort = false) {
@@ -219,7 +221,7 @@ const updateUI = function (acc) {
 
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
 
 btnLogin.addEventListener('click', function (e) {
@@ -253,7 +255,9 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
-    startLogoutTimer();
+    
+    if (timer) clearInterval(timer);
+    timer = startLogoutTimer();
 
     // Update UI
     updateUI(currentAccount);
@@ -284,7 +288,10 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
   }
+  clearInterval(timer);
+  timer = startLogoutTimer();
 });
 
 btnLoan.addEventListener('click', function (e) {
@@ -305,9 +312,11 @@ btnLoan.addEventListener('click', function (e) {
     }, 2500);
   }
   inputLoanAmount.value = '';
+  clearInterval(timer);
+  timer = startLogoutTimer();
 });
 
-btnClose.addEventListener('click', function (e) {
+btnClose.addEventListener('click', function (e) {~
   e.preventDefault();
 
   if (
@@ -328,6 +337,8 @@ btnClose.addEventListener('click', function (e) {
   }
 
   inputCloseUsername.value = inputClosePin.value = '';
+  clearInterval(timer);
+  timer = startLogoutTimer();
 });
 
 let sorted = false;
